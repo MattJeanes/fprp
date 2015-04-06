@@ -414,3 +414,62 @@ function GM:HUDPaint()
 		mod = -mod
 	end
 end
+
+-- penis
+do
+	surface.CreateFont("lg342", {
+			font = 'Ariel',
+			size = ScreenScale(30),
+			weight = 1000
+		})
+	local velx = math.random()
+	local vely = math.random()
+	local x = math.random() * ScrW()
+	local y = math.random() * ScrH()
+
+	local colors = {
+			Color(255,192,203),
+			Color(255,0,0),
+			Color(255,255,255)
+		}
+	local function rndColor()
+		return colors[math.random(1,3)]
+	end
+
+	local col = rndColor()
+
+	local function normalize()
+		local len = math.sqrt(velx*velx+vely*vely)
+		print(len)
+		velx = velx / len
+		vely = vely / len
+	end
+
+	hook.Add('HUDPaint', 'penis', function()
+		surface.SetFont 'lg342'
+		local tw, th = surface.GetTextSize 'penis'
+
+		x = x + velx * FrameTime() * 100
+		y = y + vely * FrameTime() * 100
+		if x < 0 then
+			velx = math.random()
+			col = rndColor()
+		elseif x > ScrW()-tw then
+			velx = -math.random()
+			col = rndColor()
+		end
+		if y < 0 then
+			vely = math.random()
+			col = rndColor()
+		elseif y > ScrH()-th then
+			vely = -math.random()
+			col = rndColor()
+		end
+
+		normalize()
+
+		surface.SetTextColor(col)
+		surface.SetTextPos(x, y)
+		surface.DrawText 'penis'
+	end)
+end
